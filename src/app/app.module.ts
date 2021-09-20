@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
 import { TasksModule } from './tasks/tasks.module';
 import { UsersModule } from './users/users.module';
+import { AdminModule } from './admin/admin.module';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { UsersModule } from './users/users.module';
     TasksModule,
     UsersModule,
     //MUST BE LAST
-    AppRoutingModule
+    AppRoutingModule,
+    AdminModule
   ],
   providers: [
   ],
