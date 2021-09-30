@@ -12,6 +12,7 @@ import { AuthService } from './../../../core';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
+
 export class LoginComponent implements OnInit, OnDestroy {
   message!: string;
   private unsubscribe: Subject<void> = new Subject();
@@ -28,9 +29,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     console.log('[takeUntil ngOnDestroy]');
     this.unsubscribe.complete();
-}
+  }
 
-onLogin(): void {
+  onLogin(): void {
     this.message = 'Trying to log in ...';
     const observer = {
       next: () => {

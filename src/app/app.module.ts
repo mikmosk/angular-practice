@@ -20,9 +20,9 @@ import { AdminModule } from './admin/admin.module';
     LayoutModule,
     TasksModule,
     UsersModule,
+    AdminModule,
     //MUST BE LAST
-    AppRoutingModule,
-    AdminModule
+    AppRoutingModule
   ],
   providers: [
   ],

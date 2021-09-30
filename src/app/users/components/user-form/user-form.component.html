@@ -3,7 +3,7 @@
     <h4 class="pannel-title">User Form</h4>
   </div>
   <div class="panel-body">
-    <form *ngIf="user" (ngSubmit)="onSaveUser()" id="user-form" #form="ngForm">
+    <form (ngSubmit)="onSaveUser()" id="user-form" #form="ngForm">
       <div class="form-group">
         <label for="firstName">First Name</label>
         <input
