@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { MessagesService } from './core';
+import { SpinnerService } from './widgets';
 
 @Component({
   selector: 'app-root',
@@ -8,7 +9,10 @@ import { MessagesService } from './core';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  constructor(public messagesService: MessagesService, private router: Router) {
+  constructor(
+    public messagesService: MessagesService, private router: Router,
+    public spinnerService: SpinnerService
+  ) {
 
   }
   onDisplayMessages(): void {
