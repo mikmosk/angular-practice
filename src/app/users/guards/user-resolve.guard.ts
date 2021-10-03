@@ -6,7 +6,7 @@ import { switchMap, delay, finalize, catchError, take } from 'rxjs/operators';
 import { SpinnerService } from './../../widgets';
 
 import { UserModel } from './../models/user.model';
-import { UserArrayService } from './../services/user-array.service';
+import { UserObservableService } from './../services';
 
 @Injectable({
   providedIn: 'any',
@@ -14,7 +14,7 @@ import { UserArrayService } from './../services/user-array.service';
 
 export class UserResolveGuard implements Resolve<UserModel> {
   constructor(
-    private userArrayService: UserArrayService,
+    private userObservableService: UserObservableService,
     private router: Router,
     private spinner: SpinnerService
   ) {}
@@ -29,7 +29,7 @@ export class UserResolveGuard implements Resolve<UserModel> {
     this.spinner.show();
     const id = route.paramMap.get('userID')!;
 
-    return this.userArrayService.getUser(id).pipe(
+    return this.userObservableService.getUser(id).pipe(
       delay(2000),
       switchMap((user: UserModel) => {
         if (user) {

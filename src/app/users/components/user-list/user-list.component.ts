@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 // rxjs
 import { EMPTY, Observable } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { switchMap, filter, map } from 'rxjs/operators';
 import { UserModel } from './../../models/user.model';
-import { UserArrayService } from './../../services/user-array.service';
+import { UserObservableService } from './../../services';
 
 @Component({
   templateUrl: './user-list.component.html',
@@ -16,18 +16,15 @@ export class UserListComponent implements OnInit {
   private editedUser!: UserModel;
 
   constructor(
-    private userArrayService: UserArrayService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private userObservableService: UserObservableService
   ) {}
 
   ngOnInit(): void {
-    this.users$ = this.userArrayService.users$.pipe(
-      catchError((err) => {
-        console.log(err);
-        return EMPTY;
-      })
-    );
+    this.users$ = this.userObservableService.getUsers();
+
+    this.users$.subscribe((users) => console.log(users));
 
     const observer = {
       next: (user: UserModel) => {
@@ -41,9 +38,11 @@ export class UserListComponent implements OnInit {
 
     this.route.paramMap
       .pipe(
-        switchMap((params: ParamMap) =>
-          this.userArrayService.getUser(params.get('editedUserID')!)
-        )
+        switchMap((params: ParamMap) => {
+          return params.has('editedUserID')
+            ? this.userObservableService.getUser(params.get('editedUserID')!)
+            : EMPTY;
+        })
       )
       .subscribe(observer);
   }
@@ -54,6 +53,9 @@ export class UserListComponent implements OnInit {
     // or
     // const link = ['edit', user.id];
     // this.router.navigate(link, {relativeTo: this.route});
+  }
+  onDeleteUser(user: UserModel): void {
+    this.users$ = this.userObservableService.deleteUser(user);
   }
 
   isEdited(user: UserModel): boolean {

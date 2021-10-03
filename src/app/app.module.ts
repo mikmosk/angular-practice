@@ -10,6 +10,8 @@ import { TasksModule } from './tasks/tasks.module';
 // import { UsersModule } from './users/users.module';
 // import { AdminModule } from './admin/admin.module';
 import { SpinnerModule } from './widgets/spinner/spinner.module';
+import { HttpClientModule } from '@angular/common/http';
+import { httpInterceptorProviders } from './core/interceptors';
 
 @NgModule({
   declarations: [
@@ -17,6 +19,8 @@ import { SpinnerModule } from './widgets/spinner/spinner.module';
   ],
   imports: [
     BrowserModule,
+    // import HttpClientModule after BrowserModule
+    HttpClientModule,
     FormsModule,
     LayoutModule,
     TasksModule,
@@ -25,6 +29,7 @@ import { SpinnerModule } from './widgets/spinner/spinner.module';
     AppRoutingModule
   ],
   providers: [
+    httpInterceptorProviders
   ],
   bootstrap: [AppComponent]
 })

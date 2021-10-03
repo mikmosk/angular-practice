@@ -1,4 +1,10 @@
-import { Component, Input, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  Input,
+  ChangeDetectionStrategy,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 import { UserModel } from './../../models/user.model';
 
 @Component({
@@ -7,15 +13,18 @@ import { UserModel } from './../../models/user.model';
   styleUrls: ['./user.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-
 export class UserComponent {
   @Input() user!: UserModel;
 
   @Output() editUser = new EventEmitter<UserModel>();
+  @Output() deleteUser = new EventEmitter<UserModel>();
 
   onEditUser(): void {
     this.editUser.emit(this.user);
     console.log(this.user);
+  }
 
+  onDeleteUser(): void {
+    this.deleteUser.emit(this.user);
   }
 }
