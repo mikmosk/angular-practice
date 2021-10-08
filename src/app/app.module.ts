@@ -12,6 +12,7 @@ import { TasksModule } from './tasks/tasks.module';
 import { SpinnerModule } from './widgets/spinner/spinner.module';
 import { HttpClientModule } from '@angular/common/http';
 import { httpInterceptorProviders } from './core/interceptors';
+import { RootStoreModule } from './core/@ngrx/root-store.module';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { httpInterceptorProviders } from './core/interceptors';
     TasksModule,
     SpinnerModule.forRoot(),
     //MUST BE LAST
-    AppRoutingModule
+    AppRoutingModule,
+    RootStoreModule
   ],
   providers: [
     httpInterceptorProviders
@@ -37,8 +39,6 @@ export class AppModule {
   constructor(router: Router) {
     const replacer = (key: string, value: any): string =>
       typeof value === 'function' ? value.name : value
-
-    console.log('Routes', JSON.stringify(router.config, replacer, 2));
-
+    // console.log('Routes', JSON.stringify(router.config, replacer, 2));
   }
 }

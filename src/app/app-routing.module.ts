@@ -5,7 +5,7 @@ import { AuthGuard, CustomPreloadingStrategyService  } from './core';
 
 const extraOptions: ExtraOptions = {
   preloadingStrategy: CustomPreloadingStrategyService,
-  enableTracing: true // Makes the router log all its internal events to the console.
+  // enableTracing: true // Makes the router log all its internal events to the console.
 };
 
 const routes: Routes = [

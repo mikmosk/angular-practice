@@ -61,11 +61,11 @@ export class AppComponent implements OnInit {
   }
 
   onActivate($event: any, routerOutlet: RouterOutlet): void {
-    console.log('Activated Component', $event, routerOutlet);
+    // console.log('Activated Component', $event, routerOutlet);
     this.metaService.addTags(routerOutlet.activatedRouteData.meta);
   }
 
   onDeactivate($event: any, routerOutlet: RouterOutlet): void {
-    console.log('Deactivated Component', $event, routerOutlet);
+    // console.log('Deactivated Component', $event, routerOutlet);
   }
 }

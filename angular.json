@@ -106,6 +106,7 @@
   },
   "defaultProject": "angular-routing",
   "cli": {
-    "analytics": false
+    "analytics": false,
+    "defaultCollection": "@ngrx/schematics"
   }
 }
