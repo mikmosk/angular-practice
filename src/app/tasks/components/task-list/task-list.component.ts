@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { TaskModel } from './../../models/task.model';
-import { TaskArrayService } from './../../services/task-array.service';
+import { TaskArrayService } from './../../services/';
 import { Router } from '@angular/router';
 // @Ngrx
 import { Store } from '@ngrx/store';
 import { AppState, TasksState } from './../../../core/@ngrx';
 // rxjs
 import { Observable } from 'rxjs';
+import * as TasksActions from './../../../core/@ngrx/tasks/tasks.actions';
 
 @Component({
   templateUrl: './task-list.component.html',
@@ -15,24 +16,22 @@ import { Observable } from 'rxjs';
 
 export class TaskListComponent implements OnInit {
   tasksState$!: Observable<TasksState>;
-  tasks!: Promise<Array<TaskModel>>;
 
   constructor(
     private taskArrayService: TaskArrayService,
     private router: Router,
-    private store: Store<AppState>
+    private store: Store<AppState>,
   ) {}
 
   ngOnInit(): void {
-    this.tasks = this.taskArrayService.getTasks();
     console.log('We have a store! ', this.store);
     this.tasksState$ = this.store.select('tasks');
+    this.store.dispatch(TasksActions.getTasks())
     this.tasksState$.subscribe(task => console.log(task))
   }
 
   onCompleteTask(task: TaskModel): void {
-    const updatedTask = { ...task, done: true };
-    this.taskArrayService.updateTask(updatedTask);
+    this.store.dispatch(TasksActions.completeTask({ task }));
   }
 
   onEditTask(task: TaskModel): void {

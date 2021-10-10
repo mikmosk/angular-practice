@@ -29,3 +29,16 @@ export const deleteTask = createAction(
   props<{ task: TaskModel }>()
 );
 
+export const getTasksSuccess = createAction(
+  '[Get Tasks Effect] GET_TASKS_SUCCEESS',
+  props<{ tasks: TaskModel[] }>()
+);
+export const getTasksError = createAction(
+  '[Get Tasks Effect] GET_TASKS_ERROR',
+  props<{ error: Error | string | null }>()
+);
+
+
+export function TaskListComponentIsDestroyed(TaskListComponentIsDestroyed: any): import("rxjs").OperatorFunction<import("@ngrx/store").Action, any> {
+  throw new Error('Function not implemented.');
+}
