@@ -18,7 +18,6 @@ export class TaskListComponent implements OnInit {
   tasksState$!: Observable<TasksState>;
 
   constructor(
-    private taskArrayService: TaskArrayService,
     private router: Router,
     private store: Store<AppState>,
   ) {}

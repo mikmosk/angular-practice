@@ -1,37 +1,59 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TaskModel } from './../../models/task.model';
 import { TaskArrayService } from './../../services/task-array.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 // rxjs
-import { switchMap } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+// @NgRx
+import { Store } from '@ngrx/store';
+import { AppState, TasksState } from './../../../core/@ngrx';
+import * as TasksActions from './../../../core/@ngrx/tasks/tasks.actions';
 
 @Component({
   templateUrl: './task-form.component.html',
   styleUrls: ['./task-form.component.css'],
 })
-export class TaskFormComponent implements OnInit {
+export class TaskFormComponent implements OnInit, OnDestroy {
   task!: TaskModel;
+  private componentDestroyed$: Subject<void> = new Subject<void>();
 
   constructor(
     private taskArrayService: TaskArrayService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private store: Store<AppState>
   ) {}
 
   ngOnInit(): void {
-    this.task = new TaskModel();
-
-    // it is not necessary to save subscription to route.paramMap
-    // when router destroys this component, it handles subscriptions automatically
-    const observer = {
-      next: (task: TaskModel | any) => (this.task = { ...task }),
-      error: (err: any) => console.log(err),
+    let observer: any = {
+      next: (tasksState: TasksState) => {
+        this.task = { ...tasksState.selectedTask } as TaskModel;
+      },
+      error(err: any) {
+        console.log(err);
+      },
+      complete() {
+        console.log('Stream is completed');
+      },
     };
 
-    this.route.paramMap
-      .pipe(
-        switchMap((params: ParamMap) => this.taskArrayService.getTask(params.get('taskID')?.toString()!)))
+    this.store
+      .select('tasks')
+      .pipe(takeUntil(this.componentDestroyed$))
       .subscribe(observer);
+
+    observer = {
+      ...observer,
+      next: (params: ParamMap) => {
+        const id = params.get('taskID');
+        if (id) {
+          this.store.dispatch(TasksActions.getTask({ taskID: +id }));
+        }
+      },
+    };
+
+    this.route.paramMap.subscribe(observer);
   }
 
   onSaveTask(): void {
@@ -48,4 +70,10 @@ export class TaskFormComponent implements OnInit {
   onGoBack(): void {
     this.router.navigate(['/home']);
   }
+
+  ngOnDestroy(): void {
+    this.componentDestroyed$.next();
+    this.componentDestroyed$.complete();
+  }
+
 }

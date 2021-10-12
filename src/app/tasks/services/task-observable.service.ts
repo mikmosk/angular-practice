@@ -33,7 +33,11 @@ export class TaskObservableService {
 
     return this.http
       .get<TaskModel[]>(this.tasksUrl)
-      .pipe(retry(3), share(), catchError(this.handleError));
+      .pipe(
+        retry(3),
+        share(),
+        catchError(this.handleError)
+      );
   }
 
   getTask(id: number | string): Observable<TaskModel> {
@@ -49,14 +53,6 @@ export class TaskObservableService {
 
     return this.http
       .put<TaskModel>(url, task)
-      .pipe(catchError(this.handleError));
-  }
-
-  createUser(user: TaskModel): Observable<TaskModel> {
-    const url = this.tasksUrl;
-
-    return this.http
-      .post<TaskModel>(url, user)
       .pipe(catchError(this.handleError));
   }
 
