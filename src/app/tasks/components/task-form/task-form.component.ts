@@ -19,7 +19,6 @@ export class TaskFormComponent implements OnInit, OnDestroy {
   private componentDestroyed$: Subject<void> = new Subject<void>();
 
   constructor(
-    private taskArrayService: TaskArrayService,
     private router: Router,
     private route: ActivatedRoute,
     private store: Store<AppState>
@@ -59,9 +58,9 @@ export class TaskFormComponent implements OnInit, OnDestroy {
   onSaveTask(): void {
     const task = { ...this.task } as TaskModel;
     if (task.id) {
-      this.taskArrayService.updateTask(task);
+      this.store.dispatch(TasksActions.updateTask({ task }));
     } else {
-      this.taskArrayService.createTask(task);
+      this.store.dispatch(TasksActions.createTask({ task }));
     }
 
     this.onGoBack();
@@ -75,5 +74,4 @@ export class TaskFormComponent implements OnInit, OnDestroy {
     this.componentDestroyed$.next();
     this.componentDestroyed$.complete();
   }
-
 }

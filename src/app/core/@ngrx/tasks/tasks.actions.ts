@@ -49,6 +49,16 @@ export const getTaskError = createAction(
   props<{ error: Error | string | null }>()
 );
 
+export const updateTaskSuccess = createAction(
+  '[Update Task Effect] UPDATE_TASK_SUCCESS',
+  props<{ task: TaskModel }>()
+);
+
+export const updateTaskError = createAction(
+  '[Update Task Effect] UPDATE_TASK_ERROR',
+  props<{ error: Error | string | null }>()
+);
+
 export function TaskListComponentIsDestroyed(TaskListComponentIsDestroyed: any): import("rxjs").OperatorFunction<import("@ngrx/store").Action, any> {
   throw new Error('Function not implemented.');
 }

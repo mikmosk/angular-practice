@@ -30,7 +30,7 @@ const reducer = createReducer(
       ...state,
       loading: false,
       loaded: true,
-      selectedTask
+      selectedTask,
     };
   }),
 
@@ -79,11 +79,33 @@ const reducer = createReducer(
     TasksActions.getTasksError,
     TasksActions.getTaskError,
     (state, { error }) => {
-    console.log('GET_TASKS_ERROR action being handled!');
+      console.log('GET_TASKS/TASK_ERROR action being handled!');
+      return {
+        ...state,
+        loading: false,
+        loaded: false,
+        error,
+      };
+    }
+  ),
+  on(TasksActions.updateTaskSuccess, (state, { task }) => {
+    console.log('UPDATE_TASK_SUCCESS action being handled!');
+    const data = [...state.data];
+
+    const index = data.findIndex((t) => t.id === task.id);
+
+    data[index] = { ...task };
+
     return {
       ...state,
-      loading: false,
-      loaded: false,
+      data,
+    };
+  }),
+
+  on(TasksActions.updateTaskError, (state, { error }) => {
+    console.log('UPDATE_TASK_ERROR action being handled!');
+    return {
+      ...state,
       error,
     };
   })
