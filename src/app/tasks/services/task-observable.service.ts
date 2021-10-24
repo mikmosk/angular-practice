@@ -56,6 +56,23 @@ export class TaskObservableService {
       .pipe(catchError(this.handleError));
   }
 
+  createTask(task: TaskModel): Observable<TaskModel> {
+    const url = this.tasksUrl;
+
+    return this.http
+      .post<TaskModel>(url, task)
+      .pipe(catchError(this.handleError));
+  }
+
+  deleteTask(task: TaskModel): Observable<TaskModel[]> {
+    const url = `${this.tasksUrl}/${task.id}`;
+
+    return this.http.delete(url).pipe(
+      concatMap(() => this.getTasks()),
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: HttpErrorResponse) {
     if (error.status === 0) {
       // A client-side or network error occurred. Handle it accordingly.

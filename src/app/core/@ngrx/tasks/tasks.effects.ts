@@ -15,6 +15,7 @@ import {
   concatMap,
   takeUntil,
   catchError,
+  pluck
 } from 'rxjs/operators';
 
 @Injectable()
@@ -54,7 +55,7 @@ export class TasksEffects {
 
   updateTask$: any = createEffect((): any  =>
     this.actions$.pipe(
-      ofType(TasksActions.updateTask),
+      ofType(TasksActions.updateTask, TasksActions.completeTask),
       map((action) => action.task),
       concatMap((task: TaskModel) =>
         this.taskObservableService.updateTask(task).pipe(
@@ -67,4 +68,34 @@ export class TasksEffects {
       )
     )
   );
+
+  createTask$: any = createEffect((): any =>
+    this.actions$.pipe(
+      ofType(TasksActions.createTask),
+      pluck('task'),
+      concatMap((task: TaskModel) =>
+        this.taskObservableService.createTask(task).pipe(
+          map(createdTask => {
+            this.router.navigate(['/home',  { createdTaskID: createdTask.id }]);
+            return TasksActions.createTaskSuccess({ task: createdTask });
+          }),
+          catchError(error => of(TasksActions.createTaskError({ error })))
+        )
+      )
+    )
+  );
+
+  deleteTask$: any = createEffect((): any =>
+    this.actions$.pipe(
+      ofType(TasksActions.deleteTask),
+      pluck('task'),
+      concatMap((task: TaskModel) =>
+        this.taskObservableService.deleteTask(task).pipe(
+          map(() => TasksActions.deleteTaskSuccess({ task })),
+          catchError(error => of(TasksActions.deleteTaskError({ error })))
+        )
+      )
+    )
+  );
+
 }

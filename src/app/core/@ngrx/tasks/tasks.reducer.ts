@@ -44,27 +44,29 @@ const reducer = createReducer(
     return { ...state };
   }),
 
-  on(TasksActions.completeTask, (state, { task }) => {
-    console.log('COMPLETE_TASK action being handled!');
+  // on(TasksActions.completeTask, (state, { task }) => {
+  //   console.log('COMPLETE_TASK action being handled!');
 
-    const id = task.id;
-    const data = state.data.map((t) => {
-      if (t.id === id) {
-        return { ...task, done: true } as TaskModel;
-      }
+  //   const id = task.id;
+  //   const data = state.data.map((t) => {
+  //     if (t.id === id) {
+  //       return { ...task, done: true } as TaskModel;
+  //     }
 
-      return t;
-    });
+  //     return t;
+  //   });
 
-    return {
-      ...state,
-      data,
-    };
-  }),
+  //   return {
+  //     ...state,
+  //     data,
+  //   };
+  // }),
+
   on(TasksActions.deleteTask, (state) => {
     console.log('DELETE_TASK action being handled!');
     return { ...state };
   }),
+
   on(TasksActions.getTasksSuccess, (state, { tasks }) => {
     console.log('GET_TASKS_SUCCESS action being handled!');
     const data = [...tasks];
@@ -73,8 +75,10 @@ const reducer = createReducer(
       data,
       loading: false,
       loaded: true,
+      selectedTask: null,
     };
   }),
+
   on(
     TasksActions.getTasksError,
     TasksActions.getTaskError,
@@ -88,6 +92,7 @@ const reducer = createReducer(
       };
     }
   ),
+
   on(TasksActions.updateTaskSuccess, (state, { task }) => {
     console.log('UPDATE_TASK_SUCCESS action being handled!');
     const data = [...state.data];
@@ -102,14 +107,40 @@ const reducer = createReducer(
     };
   }),
 
-  on(TasksActions.updateTaskError, (state, { error }) => {
-    console.log('UPDATE_TASK_ERROR action being handled!');
+  on(
+    TasksActions.createTaskError,
+    TasksActions.updateTaskError,
+    TasksActions.deleteTaskError,
+    (state, { error }) => {
+    console.log('CREATE/UPDATE/DELETE_TASK_ERROR action being handled!');
     return {
       ...state,
       error,
     };
-  })
+  }),
+
+  on(TasksActions.createTaskSuccess, (state, { task }) => {
+    console.log('CREATE_TASK_SUCCESS action being handled!');
+    const data = [...state.data, { ...task }];
+
+    return {
+      ...state,
+      data
+    };
+  }),
+
+  on(TasksActions.deleteTaskSuccess, (state, { task }) => {
+    console.log('DELETE_TASK_SUCCESS action being handled!');
+    const data = state.data.filter(t => t.id !== task.id);
+
+    return {
+      ...state,
+      data
+    };
+  }),
+
 );
+
 
 export function tasksReducer(state: TasksState | undefined, action: Action) {
   return reducer(state, action);
