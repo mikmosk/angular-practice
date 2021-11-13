@@ -4,25 +4,27 @@ import { TaskArrayService } from './../../services/';
 import { Router } from '@angular/router';
 // @Ngrx
 import { Store } from '@ngrx/store';
-import { AppState, TasksState } from './../../../core/@ngrx';
+import { AppState, selectTasksData, selectTasksError } from './../../../core/@ngrx';
 // rxjs
 import { Observable } from 'rxjs';
 import * as TasksActions from './../../../core/@ngrx/tasks/tasks.actions';
+import { tap } from 'rxjs/operators';
 
 @Component({
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.css'],
 })
 export class TaskListComponent implements OnInit {
-  tasksState$!: Observable<TasksState>;
+  tasks$!: Observable<ReadonlyArray<TaskModel>>;
+  tasksError$!: Observable<Error | string | null>;
 
   constructor(private router: Router, private store: Store<AppState>) {}
 
   ngOnInit(): void {
     console.log('We have a store! ', this.store);
-    this.tasksState$ = this.store.select('tasks');
+    this.tasks$ = this.store.select(selectTasksData);
+    this.tasksError$ = this.store.select(selectTasksError);
     this.store.dispatch(TasksActions.getTasks());
-    this.tasksState$.subscribe((task) => console.log(task));
   }
 
   onCompleteTask(task: TaskModel): void {

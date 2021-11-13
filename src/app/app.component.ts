@@ -4,8 +4,19 @@ import { MessagesService, CustomPreloadingStrategyService  } from './core';
 import { SpinnerService } from './widgets';
 import { Title, Meta } from '@angular/platform-browser';
 // rxjs
-import { Subscription } from 'rxjs';
-import { filter, map, switchMap } from 'rxjs/operators';
+import { Subscription, merge } from 'rxjs';
+import { filter, map, switchMap, tap } from 'rxjs/operators';
+// @ngrx
+import { Store } from '@ngrx/store';
+
+// This import necessary for Router Selectors Demo
+// import {
+//   AppState,
+//   selectQueryParams,
+//   selectRouteParams,
+//   selectRouteData,
+//   selectUrl
+// } from './core/@ngrx';
 
 @Component({
   selector: 'app-root',
@@ -21,7 +32,9 @@ export class AppComponent implements OnInit {
     public spinnerService: SpinnerService,
     private preloadingStrategy: CustomPreloadingStrategyService,
     private titleService: Title,
-    private metaService: Meta
+    private metaService: Meta,
+    // Store necessary for Router Selectors Demo
+    // private store: Store<AppState>
   ) {}
 
   ngOnInit(): void {
@@ -30,6 +43,14 @@ export class AppComponent implements OnInit {
       this.preloadingStrategy.preloadedModules
     );
     this.setPageTitles();
+
+    // Router Selectors Demo
+    // const url$ = this.store.select(selectUrl);
+    // const queryParams$ = this.store.select(selectQueryParams);
+    // const routeParams$ = this.store.select(selectRouteParams);
+    // const routeData$ = this.store.select(selectRouteData);
+    // const source$ = merge(url$, queryParams$, routeParams$, routeData$);
+    // source$.pipe(tap(val => console.log(val))).subscribe();
   }
 
   private setPageTitles(): void {
